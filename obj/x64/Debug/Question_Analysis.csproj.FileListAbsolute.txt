@@ -1,0 +1,4 @@
+D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\bin\x64\Debug\Question_Analysis.exe.config
+D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\obj\x64\Debug\Question_Analysis.Form1.resources
+D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\obj\x64\Debug\Question_Analysis.Properties.Resources.resources
+D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\obj\x64\Debug\Question_Analysis.csproj.GenerateResource.Cache

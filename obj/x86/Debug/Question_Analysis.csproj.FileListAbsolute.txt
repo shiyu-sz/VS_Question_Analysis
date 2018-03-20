@@ -5,3 +5,5 @@ D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\obj\x86\Debug\Question
 D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.exe
 D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.pdb
 D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.Form1.resources
+D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.csprojResolveAssemblyReference.cache
+D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\bin\Debug\Question_Analysis.exe.config
