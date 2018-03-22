@@ -9,177 +9,223 @@ namespace Question_Analysis
 {
     public partial class Form1
     {
-        //查询库是否存在
-        private bool Is_Database_Exists(string ip, string port, string user, string password, string database )
+
+        //连接数据库
+        //返回值：0x00>连接正常 -1>连接失败
+        private int Connect_Databse(ref MySqlConnection con, string ip, string port, string user, string password)
         {
-            //string connect_str = "Server=172.93.40.38;port=3306;User ID=root;Password=password;CharSet=gbk;";
-            string connect_str = "Server="+ip+";port="+port+";User ID="+user+";Password="+password+";CharSet=gbk;";
-            string query_str = "SELECT * FROM information_schema.SCHEMATA where SCHEMA_NAME='"+database+"';";
-            MySqlConnection myCon = new MySqlConnection(connect_str);//实例化链接
-            myCon.Open();//开启连接
-            MySqlCommand myCmd = new MySqlCommand(query_str, myCon);
-            int n = myCmd.ExecuteNonQuery();
-            MySqlDataReader reader = myCmd.ExecuteReader();
+            string connect_str = "Server=" + ip + ";port=" + port + ";User ID=" + user + ";Password=" + password + ";CharSet=gbk;";
 
-            if (reader.Read())
+            try
             {
-                object name = reader.GetString(1);//GetString(1)得到表中第一列的值，用name接收，因为查的是*，所以就和表中的列数一样。
-                if (name.ToString() == database)
-                    //Console.WriteLine("数据库存在");
-                    return true;
-                else
-                    //Console.WriteLine("数据库不存在");
-                    return false;
+                con = new MySqlConnection(connect_str);//实例化链接
+                con.Open();//开启连接
+                return 0x00;
             }
-            else 
+            catch (Exception ex)
             {
-                //Console.WriteLine("数据库不存在");
-                return false;
-            }
-        }
-
-        //查询库中的表是否存在
-        private bool Is_Table_Exists(string ip, string port, string user, string password, string database, string table)
-        {
-            string connect_str = "Server="+ip+";port="+port+";User ID="+user+";Password="+password+";CharSet=gbk;";
-            string query_str = "select table_name from information_schema.tables where table_schema='"+database+"';";
-            MySqlConnection myCon = new MySqlConnection(connect_str);//实例化链接
-            myCon.Open();//开启连接
-            MySqlCommand myCmd = new MySqlCommand(query_str, myCon);
-            int n = myCmd.ExecuteNonQuery();
-            MySqlDataReader reader = myCmd.ExecuteReader();
-            
-            while (reader.Read())
-            {
-                object name = reader.GetString(0);//GetString(1)得到表中第一列的值，用name接收，因为查的是*，所以就和表中的列数一样。
-                //Console.WriteLine("table = {0}", name.ToString());
-                if (name.ToString() == table)
-                {
-                    //Console.WriteLine("表存在");
-                    return true;
-                }
-            }
-            //Console.WriteLine("表不存在");
-            return false;
-        }
-
-        //创建库
-        private bool Create_Databse(string ip, string port, string user, string password, string database)
-        {
-            if (Is_Database_Exists(ip, port, user, password, database) == true)
-            {
-                Console.WriteLine("{0}数据库存在", database);
-                return false;
-            }
-            else 
-            {
-                string connect_str = "Server=" + ip + ";port=" + port + ";User ID=" + user + ";Password=" + password + ";CharSet=gbk;";
-                string create_database = "CREATE DATABASE " + database + ";";
-                MySqlConnection conn = new MySqlConnection(connect_str);
-                MySqlCommand cmd = new MySqlCommand(create_database, conn);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                return true;
-            }
-        }
-
-        //创建表
-        private bool Create_Table(string ip, string port, string user, string password, string database, string table, string structure)
-        {
-            if (Is_Table_Exists(ip, port, user, password, database, table) == true)
-            {
-                Console.WriteLine("{0}库中的{1}表存在", database, table);
-                return false;
-            }
-            else
-            {
-                string connect_str = "Server=" + ip + ";port=" + port + ";User ID=" + user + ";Password=" + password + ";Database=" + database + ";CharSet=gbk;";
-                string createStatement = "CREATE TABLE " + table + structure;
-
-                using (MySqlConnection conn = new MySqlConnection(connect_str))
-                {
-                    conn.Open();
-                    // 建表  
-                    using (MySqlCommand cmd = new MySqlCommand(createStatement, conn))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                Console.WriteLine("{0}库中的{1}表创建成功！", database, table);
-                return true;
-            }
-        }
-
-        //删除库
-        private bool Delete_Databse(string ip, string port, string user, string password, string database)
-        {
-            if (Is_Database_Exists(ip, port, user, password, database) == true)
-            {
-                string connect_str = "Server=" + ip + ";port=" + port + ";User ID=" + user + ";Password=" + password + ";CharSet=gbk;";
-                string create_database = "DROP DATABASE " + database + ";";
-                MySqlConnection conn = new MySqlConnection(connect_str);
-                MySqlCommand cmd = new MySqlCommand(create_database, conn);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                if (Is_Database_Exists(ip, port, user, password, database) == false)
-                {
-                    Console.WriteLine("{0}数据库已删除", database);
-                    return true;
-                }
-                else
-                {
-                    Console.WriteLine("{0}数据库删除失败", database);
-                    return false; 
-                }
-            }
-            else
-            {
-                Console.WriteLine("{0}数据库不存在", database);
-                return false;
-            }
-        }
-
-        //删除表
-        private bool Delete_Table(string ip, string port, string user, string password, string database, string table)
-        {
-            if (Is_Table_Exists(ip, port, user, password, database, table) == true)
-            {
-                string connect_str = "Server=" + ip + ";port=" + port + ";User ID=" + user + ";Password=" + password + ";Database=" + database + ";CharSet=gbk;";
-                string createStatement = "DROP TABLE " + table;
-
-                using (MySqlConnection conn = new MySqlConnection(connect_str))
-                {
-                    conn.Open();
-                    // 删除表  
-                    using (MySqlCommand cmd = new MySqlCommand(createStatement, conn))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                if (Is_Table_Exists(ip, port, user, password, database, table) == false)
-                {
-                    Console.WriteLine("{0}库中的{1}表已删除", database, table);
-                    return true;
-                }
-                else
-                {
-                    Console.WriteLine("{0}库中的{1}表删除失败", database, table);
-                    return false;
-                }
-            }
-            else
-            {
-                Console.WriteLine("{0}库中的{1}表不存在！", database, table);
-                return false;
+                Console.WriteLine("连接数据库错误:{0}!", ex.ToString());
+                return -1;
             }
         }
 
         //插入一行数据
-        private bool Insert_Table(string ip, string port, string user, string password, string database, string table)
-        { 
-            
+        //返回值：0x00>插入成功 -1>插入失败
+        private int Insert_Table(MySqlConnection con, string table, Test_Questions data)
+        {
+            string insert_str = "INSERT INTO " + table + " VALUES ( " + data.Subject + ", " + data.Option_A + ", " + data.Option_B + ", " + data.Option_C + ", " + data.Option_D + ", " + data.Answer + " );";
+            Console.WriteLine("{0}", insert_str);
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(insert_str, con);
+                cmd.ExecuteNonQuery();
+                return 0x00;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("插入数据失败!{0}", ex.ToString());
+                return -1;
+            }
+        }
+
+        //关闭数据库
+        //返回值：0x00>关闭成功 -1>关闭失败
+        private int Connect_Databse(MySqlConnection com)
+        {
+            try
+            {
+                com.Close();
+                return 0x00;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("关闭数据库失败!{0}", ex.ToString());
+                return -1;
+            }
+        }
+
+        //查询库是否存在
+        //返回值：0x00>数据库存在 0x01>数据库不存在 -1>查询数据库错误
+        private int Is_Database_Exists(MySqlConnection com, string database)
+        {
+            string query_str = "SELECT * FROM information_schema.SCHEMATA where SCHEMA_NAME='"+database+"';";
+
+            try
+            {
+                MySqlCommand myCmd = new MySqlCommand(query_str, com);
+                int n = myCmd.ExecuteNonQuery();
+                MySqlDataReader reader = myCmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    object name = reader.GetString(1);//GetString(1)得到表中第一列的值，用name接收，因为查的是*，所以就和表中的列数一样。
+                    reader.Close();
+                    if (name.ToString() == database)
+                        //Console.WriteLine("数据库存在");
+                        return 0x00;
+                    else
+                        //Console.WriteLine("数据库不存在");
+                        return 0x01;
+                }
+                else
+                {
+                    //Console.WriteLine("数据库不存在");
+                    reader.Close();
+                    return 0x01;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("查询数据库错误:{0}!", ex.ToString());
+                return -1;
+            } 
+        }
+
+        //查询库中的表是否存在
+        //返回值：0x00>表存在 0x01>表不存在 -1>查询数据库错误
+        private int Is_Table_Exists(MySqlConnection com, string database, string table)
+        {
+            string query_str = "select table_name from information_schema.tables where table_schema='"+database+"';";
+
+            try
+            {
+                MySqlCommand myCmd = new MySqlCommand(query_str, com);
+                int n = myCmd.ExecuteNonQuery();
+                MySqlDataReader reader = myCmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    object name = reader.GetString(0);//GetString(1)得到表中第一列的值，用name接收，因为查的是*，所以就和表中的列数一样。
+                    //Console.WriteLine("table = {0}", name.ToString());
+                    if (name.ToString() == table)
+                    {
+                        //Console.WriteLine("表存在");
+                        reader.Close();
+                        return 0x00;
+                    }
+                }
+                reader.Close();
+                //Console.WriteLine("表不存在");
+                return 0x01;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("查询库中的表错误:{0}!", ex.ToString());
+                return -1;
+            }
+        }
+
+        //创建库
+        //返回值：0x00>创建成功  -1>数据库创建错误
+        private int Create_Databse(MySqlConnection com, string database)
+        {
+            string create_database = "CREATE DATABASE " + database + ";";
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(create_database, com);
+                cmd.ExecuteNonQuery();
+                return 0x00;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("创建数据库错误:{0}!", ex.ToString());
+                return -1;
+            }
+        }
+
+        //使用库
+        //返回值：0x00>使用库成功  -1>使用库错误
+        private int User_Databse(MySqlConnection com, string database)
+        {
+            string user_database = "USE " + database + ";";
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(user_database, com);
+                cmd.ExecuteNonQuery();
+                return 0x00;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("使用数据库错误:{0}!", ex.ToString());
+                return -1;
+            }
+        }
+
+        //创建表
+        //返回值：0x00>创建成功  -1>表创建错误
+        private int Create_Table(MySqlConnection com, string table, string structure)
+        {
+            string createStatement = "CREATE TABLE " + table + structure;
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(createStatement, com);
+                cmd.ExecuteNonQuery();
+                return 0x00;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("创建表错误:{0}!", ex.ToString());
+                return -1;
+            }
+        }
+
+        //删除库
+        //返回值：0x00>删除库成功  -1>删除库错误
+        private int Delete_Databse(MySqlConnection com, string database)
+        {
+            string create_database = "DROP DATABASE " + database + ";";
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(create_database, com);
+                cmd.ExecuteNonQuery();
+                return 0x00;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("删除库错误:{0}!", ex.ToString());
+                return -1;
+            }
+        }
+
+        //删除表
+        //返回值：0x00>删除表成功  -1>删除表错误
+        private int Delete_Table(MySqlConnection com, string table)
+        {
+            string createStatement = "DROP TABLE " + table;
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(createStatement, com);
+                cmd.ExecuteNonQuery();
+                return 0x00;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("删除表错误:{0}!", ex.ToString());
+                return -1;
+            }
         }
     }
 }

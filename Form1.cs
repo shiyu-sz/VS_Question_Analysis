@@ -43,29 +43,133 @@ namespace Question_Analysis
 
         private void button6_Click(object sender, EventArgs e)
         {
-            //Is_Database_Exists("172.93.40.38", "3306", "root", "password", "mydb1");
-            //Is_Table_Exists("172.93.40.38", "3306", "root", "password", "mydb", "table2");
+            int temp;
+            MySqlConnection sqlcom = null;
             /*
-            if(Create_Databse("172.93.40.38", "3306", "root", "password", "mydb1") == true)
-                Console.WriteLine("数据库创建成功！");
-            else
-                Console.WriteLine("数据库创建失败！");
+            //连接接据库
+            temp = Connect_Databse(ref sqlcom, "172.93.40.38", "3306", "root", "password");
+            if (temp == 0x00)
+            {
+                temp = Is_Database_Exists(sqlcom, "mydb");
+                if (temp == 0x00)
+                {
+                    Console.WriteLine("数据库存在!");
+                    temp = Is_Table_Exists(sqlcom, "mydb", "table4");
+                    if(temp == 0x00)
+                        Console.WriteLine("表存在!");
+                    else if(temp == 0x01)
+                        Console.WriteLine("表不存在!");
+                    else
+                        Console.WriteLine("查询表错误");
+                }
+                else if (temp == 0x01)
+                {
+                    Console.WriteLine("数据库不存在!");
+                }
+                else
+                {
+                    Console.WriteLine("查询库错误!");
+                }
 
-            if (Create_Table("172.93.40.38", "3306", "root", "password", "mydb1", "table1", "(name VARCHAR(20),age int, sex CHAR(1))") == true)
-                Console.WriteLine("表创建成功！");
+                temp = Connect_Databse(sqlcom);
+                if (temp == 0x00)
+                {
+                    Console.WriteLine("数据库关闭成功!");
+                }
+                else
+                {
+                    Console.WriteLine("数据库关闭失败!");
+                }
+            }
             else
-                Console.WriteLine("表创建失败！");
-             */
-             /*
-             if(Delete_Databse("172.93.40.38", "3306", "root", "password", "mydb1") == true)
-                 Console.WriteLine("数据库删除成功！");
-             else
-                 Console.WriteLine("数据库删除失败！");
-              */
-            if (Delete_Table("172.93.40.38", "3306", "root", "password", "test2", "table1") == true)
-                 Console.WriteLine("数据库删除成功！");
-             else
-                 Console.WriteLine("数据库删除失败！");
+                Console.WriteLine("连接数据库失败!");
+        }
+             * */
+
+            //连接接据库
+            temp = Connect_Databse(ref sqlcom, "172.93.40.38", "3306", "root", "password");
+            if (temp == 0x00)
+            {
+                temp = Is_Database_Exists(sqlcom, "test2");
+                if (temp == 0x00)
+                {
+                    Console.WriteLine("数据库存在!");
+                    /*
+                    temp = Delete_Databse(sqlcom, "mydb2");
+                    if(temp == 0x00)
+                        Console.WriteLine("删除成功!");
+                    else
+                        Console.WriteLine("删除失败!");
+                     * */
+                    temp = User_Databse(sqlcom, "test2");
+                    if (temp == 0x00)
+                    {
+                        temp = Is_Table_Exists(sqlcom, "test2", "table3");
+                        if (temp == 0x00)
+                        {
+                            temp = Delete_Table(sqlcom, "table3");
+                            if (temp == 0x00)
+                                Console.WriteLine("删除成功!");
+                            else
+                                Console.WriteLine("删除失败!");
+                        }
+                        else if (temp == 0x01)
+                        {
+                            Console.WriteLine("表不存在!");
+                        }
+                        else
+                            Console.WriteLine("查询错误!");
+                    }
+                    else
+                        Console.WriteLine("使用数据库失败!");
+                }
+                else if (temp == 0x01)
+                {
+                    Console.WriteLine("数据库不存在!");
+                    temp = Create_Databse(sqlcom, "mydb2");
+                    if (temp == 0x00)
+                    {
+                        Console.WriteLine("创建库成功!");
+                        temp = User_Databse(sqlcom, "mydb2");
+                        if (temp == 0x00)
+                        {
+                            temp = Is_Table_Exists(sqlcom, "mydb2", "mytable5");
+                            if(temp == 0x00)
+                                Console.WriteLine("表已经存在!");
+                            else if (temp == 0x01)
+                            {
+                                temp = Create_Table(sqlcom, "mytable5", "(s1 VARCHAR(20), s2 INT, s3 INT)");
+                                if (temp == 0x00)
+                                    Console.WriteLine("创建表成功!");
+                                else
+                                    Console.WriteLine("创建表失败!");
+                            }
+                            else
+                                Console.WriteLine("查询错误!");
+                        }
+                        else
+                            Console.WriteLine("使用库失败!");
+                    }
+                    else
+                        Console.WriteLine("创建库失败!");
+                }
+                else
+                {
+                    Console.WriteLine("查询库错误!");
+                }
+
+                temp = Connect_Databse(sqlcom);
+                if (temp == 0x00)
+                {
+                    Console.WriteLine("数据库关闭成功!");
+                }
+                else
+                {
+                    Console.WriteLine("数据库关闭失败!");
+                }
+            }
+            else
+                Console.WriteLine("连接数据库失败!");
         }
 
 
