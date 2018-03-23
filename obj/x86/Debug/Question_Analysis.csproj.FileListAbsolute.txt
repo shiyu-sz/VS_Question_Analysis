@@ -7,3 +7,12 @@ D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\obj\x86\Debug\Question
 D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.Form1.resources
 D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.csprojResolveAssemblyReference.cache
 D:\WorkSync\recorder\SVN\01.Code\ARM\VS_Question_Analysis\bin\Debug\Question_Analysis.exe.config
+E:\GitHub\VS_Question_Analysis\bin\Debug\Question_Analysis.exe.config
+E:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.exe
+E:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.pdb
+E:\GitHub\VS_Question_Analysis\bin\Debug\Question_Analysis.exe
+E:\GitHub\VS_Question_Analysis\bin\Debug\Question_Analysis.pdb
+E:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.csprojResolveAssemblyReference.cache
+E:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.Form1.resources
+E:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.Properties.Resources.resources
+E:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.csproj.GenerateResource.Cache

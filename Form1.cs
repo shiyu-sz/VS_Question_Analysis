@@ -8,37 +8,24 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
+using System.Threading;
 
 namespace Question_Analysis
 {
     public partial class Form1 : Form
     {
+        Thread workerThread = null;
+        public delegate void stuInfoDelegate(string str);  //声明委托类型
+
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        //委托，用于在线程中防问UI线程的控件
+        private void showStuIfo(string str)  //本例中的线程要通过这个方法来访问主线程中的控件
         {
-            string str = "Server=172.93.40.38;User ID=root;Password=password;Database=mydb;CharSet=gbk;";
-
-            MySqlConnection con = new MySqlConnection(str);//实例化链接
-
-            con.Open();//开启连接
-
-            string strcmd = "select * from mytable";
-
-            MySqlCommand cmd = new MySqlCommand(strcmd, con);
-
-            MySqlDataAdapter ada = new MySqlDataAdapter(cmd);
-
-            DataSet ds = new DataSet();
-
-            ada.Fill(ds);//查询结果填充数据集
-
-            dataGridView1.DataSource = ds.Tables[0];
-
-            con.Close();//关闭连接
+            this.label_info.Text = str;
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -172,6 +159,37 @@ namespace Question_Analysis
                 Console.WriteLine("连接数据库失败!");
         }
 
+        private void button_open_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folder = new FolderBrowserDialog();
+            if (folder.ShowDialog() == DialogResult.OK)
+            {
+                common.gInput_Info.input_path = folder.SelectedPath;
+                this.textBox_txtpath.Text = common.gInput_Info.input_path;
+            }
+        }
+
+        private void button_start_Click(object sender, EventArgs e)
+        {
+            common.gInput_Info.mysql_ip         = this.textBox_mysqlIP.Text;
+            common.gInput_Info.mysql_port       = this.textBox_mysqlPort.Text;
+            common.gInput_Info.mysql_ID         = this.textBox_mysqlID.Text;
+            common.gInput_Info.mysql_password   = this.textBox_mysqlPasswd.Text;
+            common.gInput_Info.mysql_databases  = this.textBox_mysqlDatabease.Text;
+            common.gInput_Info.mysql_table      = this.textBox_mysqlTable.Text;
+            common.gInput_Info.table_struct     = "(Subject VARCHAR(20), A VARCHAR(20), B VARCHAR(20), C VARCHAR(20), D VARCHAR(20), Answer CHAR(1))";
+
+            workerThread = new Thread(MyThread);
+            workerThread.Name = "文件处理线程";
+            common.gCurrent_cmd = e_Current_cmd.START_CONVERSION;
+            RequestStart();
+            workerThread.Start();
+        }
+
+        private void button_stop_Click(object sender, EventArgs e)
+        {
+
+        }
 
     }
 }
