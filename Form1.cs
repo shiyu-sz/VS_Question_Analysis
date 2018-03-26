@@ -20,6 +20,17 @@ namespace Question_Analysis
         public Form1()
         {
             InitializeComponent();
+
+            this.textBox_mysqlIP.Text           = "172.93.40.38";
+            this.textBox_mysqlPort.Text         = "3306";
+            this.textBox_mysqlID.Text           = "root";
+            this.textBox_mysqlPasswd.Text       = "password";
+            this.textBox_mysqlDatabease.Text    = "sy_test";
+            this.textBox_mysqlTable.Text        = "table1";
+
+            common.gInput_Info.input_path = "E:\\GitHub\\VS_Question_Analysis\\无人机驾驶员试题库.txt";
+            this.textBox_txtpath.Text = common.gInput_Info.input_path;
+
         }
 
         //委托，用于在线程中防问UI线程的控件
@@ -161,16 +172,17 @@ namespace Question_Analysis
 
         private void button_open_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folder = new FolderBrowserDialog();
-            if (folder.ShowDialog() == DialogResult.OK)
+            OpenFileDialog file = new OpenFileDialog();
+            if (file.ShowDialog() == DialogResult.OK)
             {
-                common.gInput_Info.input_path = folder.SelectedPath;
+                common.gInput_Info.input_path = file.FileName;
                 this.textBox_txtpath.Text = common.gInput_Info.input_path;
             }
         }
 
         private void button_start_Click(object sender, EventArgs e)
         {
+
             common.gInput_Info.mysql_ip         = this.textBox_mysqlIP.Text;
             common.gInput_Info.mysql_port       = this.textBox_mysqlPort.Text;
             common.gInput_Info.mysql_ID         = this.textBox_mysqlID.Text;
@@ -181,7 +193,7 @@ namespace Question_Analysis
 
             workerThread = new Thread(MyThread);
             workerThread.Name = "文件处理线程";
-            common.gCurrent_cmd = e_Current_cmd.START_CONVERSION;
+            common.gCurrent_cmd = e_Current_cmd.CHECK_INPUT;
             RequestStart();
             workerThread.Start();
         }

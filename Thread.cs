@@ -13,7 +13,7 @@ namespace Question_Analysis
     {
         int temp = 0;
         int Line_Count = 0;
-        int Subject_Count = 1;
+        int Subject_Count = 0;
         bool error_flag = false;
         MySqlConnection sqlcom = null;
         public void MyThread()
@@ -43,8 +43,30 @@ namespace Question_Analysis
                             if (temp == 0x00)
                             {
                                 Console.WriteLine("数据库存在!");
-                                string str_info = "警告：名称为" + common.gInput_Info.mysql_databases + "的库已经存在！";
-                                BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { str_info });
+                                temp = User_Databse(sqlcom, common.gInput_Info.mysql_databases);
+                                if (temp == 0x00)
+                                {
+                                    temp = Create_Table(sqlcom, common.gInput_Info.mysql_table, common.gInput_Info.table_struct);
+                                    if (temp == 0x00)
+                                    {
+                                        Console.WriteLine("创建表成功!");
+                                        common.gCurrent_cmd = e_Current_cmd.START_CONVERSION;
+                                        common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("创建表失败!");
+                                        BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "创建表失败!" });
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("使用库失败!");
+                                    BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "使用库失败!" });
+                                }
+                                //string str_info = "警告：名称为" + common.gInput_Info.mysql_databases + "的库已经存在！";
+                                //BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { str_info });
                             }
                             else if (temp == 0x01)
                             {
@@ -108,35 +130,125 @@ namespace Question_Analysis
                     }
                     case e_Current_cmd.START_CONVERSION:
                     {
+                        System.Text.RegularExpressions.Regex reg1 = new System.Text.RegularExpressions.Regex(@"^[0-9]\d*$");
                         FileStream fs = new FileStream(common.gInput_Info.input_path, FileMode.Open, FileAccess.Read);
                         StreamReader read = new StreamReader(fs);
                         string line;
-                        while (((line = read.ReadLine()) != null) && (error_flag == false))
+                        while ( (line = read.ReadLine()) != null )
                         {
-                            Line_Count++;
-                            Console.WriteLine(line.ToString());
+
                             switch (common.gConversion_cmd)
                             {
                                 case e_Conversion_cmd.SUBJECT:
                                 {
-                                    string num = line.Substring(0, 3);
-                                    if (int.Parse(num) != Subject_Count)
+                                    if ((line != "\n") && (line != ""))
                                     {
-                                        string error = "题号错误：" + Line_Count.ToString();
-                                        BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { error });
-                                        error_flag = true;
-                                        break;
+                                        if (reg1.IsMatch(line.Substring(0, 3)))
+                                        {
+                                            common.gTest_Questions.Subject = line.Substring(4);
+                                            common.gConversion_cmd = e_Conversion_cmd.OPTION_A;
+                                        }
                                     }
-                                    common.gTest_Questions.Subject = line.Substring(4, line.Length - 4);
+                                    else
+                                        Console.WriteLine("错误的行!");
                                     break;
                                 }
+                                case e_Conversion_cmd.OPTION_A:
+                                {
+                                    if (line.Substring(0, 1) == "A")
+                                    {
+                                        common.gTest_Questions.Option_A = line.Substring(2);
+                                        common.gConversion_cmd = e_Conversion_cmd.OPTION_B;
+                                    }
+                                    else
+                                        Console.WriteLine("错误的行!");
+                                    break;
+                                }
+                                case e_Conversion_cmd.OPTION_B:
+                                {
+                                    if (line.Substring(0, 1) == "B")
+                                    {
+                                        common.gTest_Questions.Option_B = line.Substring(2);
+                                        common.gConversion_cmd = e_Conversion_cmd.OPTION_C;
+                                    }
+                                    else
+                                        Console.WriteLine("错误的行!");
+                                    break;
+                                }
+                                case e_Conversion_cmd.OPTION_C:
+                                {
+                                    if (line.Substring(0, 1) == "C")
+                                    {
+                                        common.gTest_Questions.Option_C = line.Substring(2);
+                                        common.gConversion_cmd = e_Conversion_cmd.OPTION_D;
+                                    }
+                                    else
+                                        Console.WriteLine("错误的行!");
+                                    break;
+                                }
+                                case e_Conversion_cmd.OPTION_D:
+                                {
+                                    if (line.Substring(0, 1) == "D")
+                                    {
+                                        common.gTest_Questions.Option_D = line.Substring(2);
+                                        common.gConversion_cmd = e_Conversion_cmd.NULL;
+                                    }
+                                    else
+                                        Console.WriteLine("错误的行!");
+                                    break;
+                                }
+                                case e_Conversion_cmd.NULL:
+                                {
+                                    if (line == "\n")
+                                    {
+                                        common.gTest_Questions.Option_D = line.Substring(2);
+                                        common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                        common.gTest_Questions.Title_Number = Subject_Count;
+                                        Insert_Table(sqlcom, common.gInput_Info.mysql_table, common.gTest_Questions);
+                                        Subject_Count++;
+                                    }
+                                    else
+                                        Console.WriteLine("错误的行!");
+                                    break;
+                                }
+                                default: break;
                             }
-
-                            if (error_flag == true)
+                            /*
+                            if (line != "")
                             {
-                                common.gCurrent_cmd = e_Current_cmd.CONVERSION_FAILURE;
-                                break;
+                                if (reg1.IsMatch(line.Substring(0, 3)))
+                                {
+                                    common.gTest_Questions.Subject = line.Substring(4);
+                                }
+                                else if (line.Substring(0, 1) == "A")
+                                {
+                                    common.gTest_Questions.Option_A = line.Substring(2);
+                                }
+                                else if (line.Substring(0, 1) == "B")
+                                {
+                                    common.gTest_Questions.Option_B = line.Substring(2);
+                                }
+                                else if (line.Substring(0, 1) == "C")
+                                {
+                                    common.gTest_Questions.Option_C = line.Substring(2);
+                                }
+                                else if (line.Substring(0, 1) == "D")
+                                {
+                                    common.gTest_Questions.Option_D = line.Substring(2);
+                                }
+                                else if (line.Substring(0, 2) == "答案")
+                                {
+                                    common.gTest_Questions.Answer = line.Substring(3, 1);
+                                }
+                                else if (line == "\n")
+                                {
+                                    Console.WriteLine("ssssyyyy");
+                                    common.gTest_Questions.Title_Number = Subject_Count;
+                                    Insert_Table(sqlcom, common.gInput_Info.mysql_table, common.gTest_Questions);
+                                    Subject_Count++;
+                                }
                             }
+                             * */
                         }
 
                         Thread.Sleep(1);
