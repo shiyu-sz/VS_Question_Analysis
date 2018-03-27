@@ -24,6 +24,7 @@ namespace Question_Analysis
                 {
                     case e_Current_cmd.CHECK_INPUT:
                     {
+                        Console.WriteLine("e_Current_cmd.CHECK_INPUT!");
                         if (File.Exists(common.gInput_Info.input_path))
                         {
                             Console.WriteLine("文件存在！");
@@ -43,6 +44,7 @@ namespace Question_Analysis
                             if (temp == 0x00)
                             {
                                 Console.WriteLine("数据库存在!");
+                                Change_Datebase_Code(sqlcom, common.gInput_Info.mysql_databases);
                                 temp = User_Databse(sqlcom, common.gInput_Info.mysql_databases);
                                 if (temp == 0x00)
                                 {
@@ -75,6 +77,7 @@ namespace Question_Analysis
                                 if (temp == 0x00)
                                 {
                                     Console.WriteLine("创建库成功!");
+                                    Change_Datebase_Code(sqlcom, common.gInput_Info.mysql_databases);
                                     temp = User_Databse(sqlcom, common.gInput_Info.mysql_databases);
                                     if (temp == 0x00)
                                     {
@@ -130,125 +133,164 @@ namespace Question_Analysis
                     }
                     case e_Current_cmd.START_CONVERSION:
                     {
+                        Console.WriteLine("e_Current_cmd.START_CONVERSION!");
                         System.Text.RegularExpressions.Regex reg1 = new System.Text.RegularExpressions.Regex(@"^[0-9]\d*$");
                         FileStream fs = new FileStream(common.gInput_Info.input_path, FileMode.Open, FileAccess.Read);
                         StreamReader read = new StreamReader(fs);
                         string line;
                         while ( (line = read.ReadLine()) != null )
                         {
-
+                            Console.WriteLine("line = {0}", line);
                             switch (common.gConversion_cmd)
                             {
                                 case e_Conversion_cmd.SUBJECT:
                                 {
-                                    if ((line != "\n") && (line != ""))
+                                    Console.WriteLine("e_Conversion_cmd.SUBJECT!");
+                                    try
                                     {
-                                        if (reg1.IsMatch(line.Substring(0, 3)))
+                                        if ((line.Length > 4))
                                         {
-                                            common.gTest_Questions.Subject = line.Substring(4);
-                                            common.gConversion_cmd = e_Conversion_cmd.OPTION_A;
+                                            if (reg1.IsMatch(line.Substring(0, 3)))
+                                            {
+                                                common.gTest_Questions.Subject = line.Substring(4);
+                                                common.gConversion_cmd = e_Conversion_cmd.OPTION_A;
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("SUBJECT:错误的行,不是题目!");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("SUBJECT:错误的行!");
                                         }
                                     }
-                                    else
-                                        Console.WriteLine("错误的行!");
+                                    catch
+                                    {
+                                        common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                        Console.WriteLine("SUBJECT:不完整的题目或错误的行!");
+                                    }
                                     break;
                                 }
                                 case e_Conversion_cmd.OPTION_A:
                                 {
-                                    if (line.Substring(0, 1) == "A")
+                                    Console.WriteLine("e_Conversion_cmd.OPTION_A!");
+                                    try
                                     {
-                                        common.gTest_Questions.Option_A = line.Substring(2);
-                                        common.gConversion_cmd = e_Conversion_cmd.OPTION_B;
+                                        if (line.Substring(0, 1) == "A")
+                                        {
+                                            common.gTest_Questions.Option_A = line.Substring(2);
+                                            common.gConversion_cmd = e_Conversion_cmd.OPTION_B;
+                                        }
+                                        else
+                                        {
+                                            common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                            Console.WriteLine("OPTION_A:错误的行,没有读到A!");
+                                        }
                                     }
-                                    else
-                                        Console.WriteLine("错误的行!");
+                                    catch
+                                    {
+                                        common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                        Console.WriteLine("OPTION_A:不完整的题目或错误的行!");
+                                    }
                                     break;
                                 }
                                 case e_Conversion_cmd.OPTION_B:
                                 {
-                                    if (line.Substring(0, 1) == "B")
+                                    Console.WriteLine("e_Conversion_cmd.OPTION_B!");
+                                    try
                                     {
-                                        common.gTest_Questions.Option_B = line.Substring(2);
-                                        common.gConversion_cmd = e_Conversion_cmd.OPTION_C;
+                                        if (line.Substring(0, 1) == "B")
+                                        {
+                                            common.gTest_Questions.Option_B = line.Substring(2);
+                                            common.gConversion_cmd = e_Conversion_cmd.OPTION_C;
+                                        }
+                                        else
+                                        {
+                                            common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                            Console.WriteLine("OPTION_B:错误的行,没有读到B!");
+                                        }
                                     }
-                                    else
-                                        Console.WriteLine("错误的行!");
+                                    catch
+                                    {
+                                        common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                        Console.WriteLine("OPTION_B:不完整的题目或错误的行!");
+                                    }
                                     break;
                                 }
                                 case e_Conversion_cmd.OPTION_C:
                                 {
-                                    if (line.Substring(0, 1) == "C")
+                                    Console.WriteLine("e_Conversion_cmd.OPTION_C!");
+                                    try
                                     {
-                                        common.gTest_Questions.Option_C = line.Substring(2);
-                                        common.gConversion_cmd = e_Conversion_cmd.OPTION_D;
+                                        if (line.Substring(0, 1) == "C")
+                                        {
+                                            common.gTest_Questions.Option_C = line.Substring(2);
+                                            common.gConversion_cmd = e_Conversion_cmd.ANSWER;
+                                        }
+                                        else
+                                        {
+                                            common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                            Console.WriteLine("OPTION_C:错误的行,没有读到C!");
+                                        }
                                     }
-                                    else
-                                        Console.WriteLine("错误的行!");
+                                    catch
+                                    {
+                                        common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                        Console.WriteLine("OPTION_C:不完整的题目或错误的行!");
+                                    }
                                     break;
                                 }
-                                case e_Conversion_cmd.OPTION_D:
+                                case e_Conversion_cmd.ANSWER:
                                 {
-                                    if (line.Substring(0, 1) == "D")
+                                    Console.WriteLine("e_Conversion_cmd.ANSWER!");
+                                    try
                                     {
-                                        common.gTest_Questions.Option_D = line.Substring(2);
-                                        common.gConversion_cmd = e_Conversion_cmd.NULL;
+                                        if (line.Substring(0, 2) == "答案")
+                                        {
+                                            common.gTest_Questions.Answer = line.Substring(3,1);
+                                            common.gConversion_cmd = e_Conversion_cmd.NULL;
+                                        }
+                                        else
+                                        {
+                                            common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                            Console.WriteLine("OPTION_C:错误的行,没有读到答案!");
+                                        }
                                     }
-                                    else
-                                        Console.WriteLine("错误的行!");
+                                    catch
+                                    {
+                                        common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                        Console.WriteLine("OPTION_C:不完整的题目或错误的行!");
+                                    }
                                     break;
                                 }
                                 case e_Conversion_cmd.NULL:
                                 {
-                                    if (line == "\n")
+                                    Console.WriteLine("e_Conversion_cmd.NULL!");
+                                    try
                                     {
-                                        common.gTest_Questions.Option_D = line.Substring(2);
-                                        common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
-                                        common.gTest_Questions.Title_Number = Subject_Count;
-                                        Insert_Table(sqlcom, common.gInput_Info.mysql_table, common.gTest_Questions);
-                                        Subject_Count++;
+                                        if (line == "")
+                                        {
+                                            common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                            common.gTest_Questions.Title_Number = Subject_Count;
+                                            Insert_Table(sqlcom, common.gInput_Info.mysql_table, common.gTest_Questions);
+                                            Subject_Count++;
+                                        }
+                                        else
+                                        {
+                                            common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                            Console.WriteLine("NULL:错误的行,没有读到空的行!");
+                                        }
                                     }
-                                    else
-                                        Console.WriteLine("错误的行!");
+                                    catch
+                                    {
+                                        common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                        Console.WriteLine("NULL:不完整的题目或错误的行!");
+                                    }
                                     break;
                                 }
                                 default: break;
                             }
-                            /*
-                            if (line != "")
-                            {
-                                if (reg1.IsMatch(line.Substring(0, 3)))
-                                {
-                                    common.gTest_Questions.Subject = line.Substring(4);
-                                }
-                                else if (line.Substring(0, 1) == "A")
-                                {
-                                    common.gTest_Questions.Option_A = line.Substring(2);
-                                }
-                                else if (line.Substring(0, 1) == "B")
-                                {
-                                    common.gTest_Questions.Option_B = line.Substring(2);
-                                }
-                                else if (line.Substring(0, 1) == "C")
-                                {
-                                    common.gTest_Questions.Option_C = line.Substring(2);
-                                }
-                                else if (line.Substring(0, 1) == "D")
-                                {
-                                    common.gTest_Questions.Option_D = line.Substring(2);
-                                }
-                                else if (line.Substring(0, 2) == "答案")
-                                {
-                                    common.gTest_Questions.Answer = line.Substring(3, 1);
-                                }
-                                else if (line == "\n")
-                                {
-                                    Console.WriteLine("ssssyyyy");
-                                    common.gTest_Questions.Title_Number = Subject_Count;
-                                    Insert_Table(sqlcom, common.gInput_Info.mysql_table, common.gTest_Questions);
-                                    Subject_Count++;
-                                }
-                            }
-                             * */
                         }
 
                         Thread.Sleep(1);
@@ -264,6 +306,7 @@ namespace Question_Analysis
                     }
                     case e_Current_cmd.CONVERSION_FAILURE:
                     {
+                        Console.WriteLine("转换失败！");
                         this.RequestStop();
                         workerThread.Join();
                         break; 

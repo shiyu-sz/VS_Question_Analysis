@@ -189,7 +189,7 @@ namespace Question_Analysis
             common.gInput_Info.mysql_password   = this.textBox_mysqlPasswd.Text;
             common.gInput_Info.mysql_databases  = this.textBox_mysqlDatabease.Text;
             common.gInput_Info.mysql_table      = this.textBox_mysqlTable.Text;
-            common.gInput_Info.table_struct     = "(Subject VARCHAR(20), A VARCHAR(20), B VARCHAR(20), C VARCHAR(20), D VARCHAR(20), Answer CHAR(1))";
+            common.gInput_Info.table_struct     = "(Subject VARCHAR(20), A VARCHAR(20), B VARCHAR(20), C VARCHAR(20), Answer CHAR(1))";
 
             workerThread = new Thread(MyThread);
             workerThread.Name = "文件处理线程";

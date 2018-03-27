@@ -35,6 +35,7 @@ public enum e_Conversion_cmd
     OPTION_B,   //选项B
     OPTION_C,   //选项C
     OPTION_D,   //选项D
+    ANSWER,     //答案
     NULL,       //空行
 };
 

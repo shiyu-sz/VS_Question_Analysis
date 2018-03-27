@@ -14,7 +14,7 @@ namespace Question_Analysis
         //返回值：0x00>连接正常 -1>连接失败
         private int Connect_Databse(ref MySqlConnection con, string ip, string port, string user, string password)
         {
-            string connect_str = "Server=" + ip + ";port=" + port + ";User ID=" + user + ";Password=" + password + ";CharSet=gbk;";
+            string connect_str = "Server=" + ip + ";port=" + port + ";User ID=" + user + ";Password=" + password + ";CharSet=utf8;";
 
             try
             {
@@ -33,7 +33,8 @@ namespace Question_Analysis
         //返回值：0x00>插入成功 -1>插入失败
         private int Insert_Table(MySqlConnection con, string table, Test_Questions data)
         {
-            string insert_str = "INSERT INTO " + table + " VALUES ( " + data.Subject + ", " + data.Option_A + ", " + data.Option_B + ", " + data.Option_C + ", " + data.Option_D + ", " + data.Answer + " );";
+            string insert_str = "INSERT INTO " + table + " VALUES ( "+ "\"" + data.Subject + "\""+", " + "\""+ data.Option_A + "\""+ ", " + "\""+ data.Option_B + "\""+ ", " + "\""+ data.Option_C + "\""+ ", " + "\""+ data.Answer + "\""+ " );";
+            Console.WriteLine("INSERT = {0}", insert_str);
             Console.WriteLine("{0}", insert_str);
 
             try
@@ -177,7 +178,7 @@ namespace Question_Analysis
         //返回值：0x00>创建成功  -1>表创建错误
         private int Create_Table(MySqlConnection com, string table, string structure)
         {
-            string createStatement = "CREATE TABLE " + table + structure;
+            string createStatement = "CREATE TABLE " + table + structure + "ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 
             try
             {
@@ -224,6 +225,23 @@ namespace Question_Analysis
             catch (Exception ex)
             {
                 Console.WriteLine("删除表错误:{0}!", ex.ToString());
+                return -1;
+            }
+        }
+
+        //更改数据库编码
+        private int Change_Datebase_Code(MySqlConnection com, string database)
+        {
+            string str = "alter database " + database + " character set utf8;";
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(str, com);
+                cmd.ExecuteNonQuery();
+                return 0x00;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("更改数据库编码:{0}!", ex.ToString());
                 return -1;
             }
         }
