@@ -58,4 +58,5 @@ public static class common // static 不是必须
     public static e_Current_cmd gCurrent_cmd;
     public static Input_Info gInput_Info;
     public static e_Conversion_cmd gConversion_cmd;
+
 }

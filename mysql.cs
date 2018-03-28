@@ -35,7 +35,6 @@ namespace Question_Analysis
         {
             string insert_str = "INSERT INTO " + table + " VALUES ( "+ "\"" + data.Subject + "\""+", " + "\""+ data.Option_A + "\""+ ", " + "\""+ data.Option_B + "\""+ ", " + "\""+ data.Option_C + "\""+ ", " + "\""+ data.Answer + "\""+ " );";
             Console.WriteLine("INSERT = {0}", insert_str);
-            Console.WriteLine("{0}", insert_str);
 
             try
             {
@@ -178,8 +177,8 @@ namespace Question_Analysis
         //返回值：0x00>创建成功  -1>表创建错误
         private int Create_Table(MySqlConnection com, string table, string structure)
         {
-            string createStatement = "CREATE TABLE " + table + structure + "ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
-
+            //string createStatement = "CREATE TABLE " + table + structure + "ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+            string createStatement = "CREATE TABLE " + table + structure;
             try
             {
                 MySqlCommand cmd = new MySqlCommand(createStatement, com);

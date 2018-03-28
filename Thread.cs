@@ -14,7 +14,6 @@ namespace Question_Analysis
         int temp = 0;
         int Line_Count = 0;
         int Subject_Count = 0;
-        bool error_flag = false;
         MySqlConnection sqlcom = null;
         public void MyThread()
         {
@@ -44,7 +43,7 @@ namespace Question_Analysis
                             if (temp == 0x00)
                             {
                                 Console.WriteLine("数据库存在!");
-                                Change_Datebase_Code(sqlcom, common.gInput_Info.mysql_databases);
+                                //Change_Datebase_Code(sqlcom, common.gInput_Info.mysql_databases);
                                 temp = User_Databse(sqlcom, common.gInput_Info.mysql_databases);
                                 if (temp == 0x00)
                                 {
@@ -77,7 +76,7 @@ namespace Question_Analysis
                                 if (temp == 0x00)
                                 {
                                     Console.WriteLine("创建库成功!");
-                                    Change_Datebase_Code(sqlcom, common.gInput_Info.mysql_databases);
+                                    //Change_Datebase_Code(sqlcom, common.gInput_Info.mysql_databases);
                                     temp = User_Databse(sqlcom, common.gInput_Info.mysql_databases);
                                     if (temp == 0x00)
                                     {
@@ -138,14 +137,15 @@ namespace Question_Analysis
                         FileStream fs = new FileStream(common.gInput_Info.input_path, FileMode.Open, FileAccess.Read);
                         StreamReader read = new StreamReader(fs);
                         string line;
-                        while ( (line = read.ReadLine()) != null )
+                        while (((line = read.ReadLine()) != null) && (_shouldStop != false))
                         {
-                            Console.WriteLine("line = {0}", line);
+                            Line_Count++;
+                            //Console.WriteLine("Line_Count = {0}", Line_Count);
                             switch (common.gConversion_cmd)
                             {
                                 case e_Conversion_cmd.SUBJECT:
                                 {
-                                    Console.WriteLine("e_Conversion_cmd.SUBJECT!");
+                                    //Console.WriteLine("e_Conversion_cmd.SUBJECT!");
                                     try
                                     {
                                         if ((line.Length > 4))
@@ -158,23 +158,26 @@ namespace Question_Analysis
                                             else
                                             {
                                                 Console.WriteLine("SUBJECT:错误的行,不是题目!");
+                                                Console.WriteLine("Line_Count = {0}", Line_Count);
                                             }
                                         }
                                         else
                                         {
                                             Console.WriteLine("SUBJECT:错误的行!");
+                                            Console.WriteLine("Line_Count = {0}", Line_Count);
                                         }
                                     }
                                     catch
                                     {
                                         common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                         Console.WriteLine("SUBJECT:不完整的题目或错误的行!");
+                                        Console.WriteLine("Line_Count = {0}", Line_Count);
                                     }
                                     break;
                                 }
                                 case e_Conversion_cmd.OPTION_A:
                                 {
-                                    Console.WriteLine("e_Conversion_cmd.OPTION_A!");
+                                    //Console.WriteLine("e_Conversion_cmd.OPTION_A!");
                                     try
                                     {
                                         if (line.Substring(0, 1) == "A")
@@ -186,18 +189,20 @@ namespace Question_Analysis
                                         {
                                             common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                             Console.WriteLine("OPTION_A:错误的行,没有读到A!");
+                                            Console.WriteLine("Line_Count = {0}", Line_Count);
                                         }
                                     }
                                     catch
                                     {
                                         common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                         Console.WriteLine("OPTION_A:不完整的题目或错误的行!");
+                                        Console.WriteLine("Line_Count = {0}", Line_Count);
                                     }
                                     break;
                                 }
                                 case e_Conversion_cmd.OPTION_B:
                                 {
-                                    Console.WriteLine("e_Conversion_cmd.OPTION_B!");
+                                    //Console.WriteLine("e_Conversion_cmd.OPTION_B!");
                                     try
                                     {
                                         if (line.Substring(0, 1) == "B")
@@ -209,18 +214,20 @@ namespace Question_Analysis
                                         {
                                             common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                             Console.WriteLine("OPTION_B:错误的行,没有读到B!");
+                                            Console.WriteLine("Line_Count = {0}", Line_Count);
                                         }
                                     }
                                     catch
                                     {
                                         common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                         Console.WriteLine("OPTION_B:不完整的题目或错误的行!");
+                                        Console.WriteLine("Line_Count = {0}", Line_Count);
                                     }
                                     break;
                                 }
                                 case e_Conversion_cmd.OPTION_C:
                                 {
-                                    Console.WriteLine("e_Conversion_cmd.OPTION_C!");
+                                    //Console.WriteLine("e_Conversion_cmd.OPTION_C!");
                                     try
                                     {
                                         if (line.Substring(0, 1) == "C")
@@ -232,18 +239,20 @@ namespace Question_Analysis
                                         {
                                             common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                             Console.WriteLine("OPTION_C:错误的行,没有读到C!");
+                                            Console.WriteLine("Line_Count = {0}", Line_Count);
                                         }
                                     }
                                     catch
                                     {
                                         common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                         Console.WriteLine("OPTION_C:不完整的题目或错误的行!");
+                                        Console.WriteLine("Line_Count = {0}", Line_Count);
                                     }
                                     break;
                                 }
                                 case e_Conversion_cmd.ANSWER:
                                 {
-                                    Console.WriteLine("e_Conversion_cmd.ANSWER!");
+                                    //Console.WriteLine("e_Conversion_cmd.ANSWER!");
                                     try
                                     {
                                         if (line.Substring(0, 2) == "答案")
@@ -255,18 +264,20 @@ namespace Question_Analysis
                                         {
                                             common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                             Console.WriteLine("OPTION_C:错误的行,没有读到答案!");
+                                            Console.WriteLine("Line_Count = {0}", Line_Count);
                                         }
                                     }
                                     catch
                                     {
                                         common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                         Console.WriteLine("OPTION_C:不完整的题目或错误的行!");
+                                        Console.WriteLine("Line_Count = {0}", Line_Count);
                                     }
                                     break;
                                 }
                                 case e_Conversion_cmd.NULL:
                                 {
-                                    Console.WriteLine("e_Conversion_cmd.NULL!");
+                                    //Console.WriteLine("e_Conversion_cmd.NULL!");
                                     try
                                     {
                                         if (line == "")
@@ -280,19 +291,21 @@ namespace Question_Analysis
                                         {
                                             common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                             Console.WriteLine("NULL:错误的行,没有读到空的行!");
+                                            Console.WriteLine("Line_Count = {0}", Line_Count);
                                         }
                                     }
                                     catch
                                     {
                                         common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                         Console.WriteLine("NULL:不完整的题目或错误的行!");
+                                        Console.WriteLine("Line_Count = {0}", Line_Count);
                                     }
                                     break;
                                 }
                                 default: break;
                             }
                         }
-
+                        common.gCurrent_cmd = e_Current_cmd.CONVERSION_FINISH;
                         Thread.Sleep(1);
                         break;
                     }

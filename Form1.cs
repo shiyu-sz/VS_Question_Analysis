@@ -21,10 +21,10 @@ namespace Question_Analysis
         {
             InitializeComponent();
 
-            this.textBox_mysqlIP.Text           = "172.93.40.38";
+            this.textBox_mysqlIP.Text           = "127.0.0.1";
             this.textBox_mysqlPort.Text         = "3306";
             this.textBox_mysqlID.Text           = "root";
-            this.textBox_mysqlPasswd.Text       = "password";
+            this.textBox_mysqlPasswd.Text       = "84436446";
             this.textBox_mysqlDatabease.Text    = "sy_test";
             this.textBox_mysqlTable.Text        = "table1";
 
@@ -189,7 +189,7 @@ namespace Question_Analysis
             common.gInput_Info.mysql_password   = this.textBox_mysqlPasswd.Text;
             common.gInput_Info.mysql_databases  = this.textBox_mysqlDatabease.Text;
             common.gInput_Info.mysql_table      = this.textBox_mysqlTable.Text;
-            common.gInput_Info.table_struct     = "(Subject VARCHAR(20), A VARCHAR(20), B VARCHAR(20), C VARCHAR(20), Answer CHAR(1))";
+            common.gInput_Info.table_struct     = "(Subject VARCHAR(200), A VARCHAR(100), B VARCHAR(100), C VARCHAR(1000), Answer CHAR(1))";
 
             workerThread = new Thread(MyThread);
             workerThread.Name = "文件处理线程";
