@@ -21,10 +21,10 @@ namespace Question_Analysis
         {
             InitializeComponent();
 
-            this.textBox_mysqlIP.Text           = "127.0.0.1";
+            this.textBox_mysqlIP.Text           = "172.93.40.38";
             this.textBox_mysqlPort.Text         = "3306";
             this.textBox_mysqlID.Text           = "root";
-            this.textBox_mysqlPasswd.Text       = "84436446";
+            this.textBox_mysqlPasswd.Text       = "password";
             this.textBox_mysqlDatabease.Text    = "sy_test";
             this.textBox_mysqlTable.Text        = "table1";
 
