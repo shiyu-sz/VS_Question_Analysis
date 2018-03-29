@@ -118,7 +118,7 @@ namespace Question_Analysis
                             BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "连接数据库失败!" });
                         }
 
-                        temp = Connect_Databse(sqlcom);
+                        temp = Close_Databse(sqlcom);
                         if (temp == 0x00)
                         {
                             Console.WriteLine("数据库关闭成功!");
@@ -140,7 +140,7 @@ namespace Question_Analysis
                         while (((line = read.ReadLine()) != null) && (_shouldStop != false))
                         {
                             Line_Count++;
-                            //Console.WriteLine("Line_Count = {0}", Line_Count);
+                            Console.WriteLine("Line_Count = {0} line = {1}", Line_Count, line);
                             switch (common.gConversion_cmd)
                             {
                                 case e_Conversion_cmd.SUBJECT:
@@ -306,27 +306,59 @@ namespace Question_Analysis
                             }
                         }
                         common.gCurrent_cmd = e_Current_cmd.CONVERSION_FINISH;
-                        Thread.Sleep(1);
+                        Thread.Sleep(100);
                         break;
                     }
                     case e_Current_cmd.CONVERSION_FINISH:
                     {
+                        Thread.Sleep(100);
                         Console.WriteLine("转换完成！");
                         BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "转换完成！" });
                         this.RequestStop();
-                        workerThread.Join();
+                        //关闭数据库
+                        temp = Close_Databse(sqlcom);
+                        if (temp == 0x00)
+                        {
+                            Console.WriteLine("数据库关闭成功!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("数据库关闭失败!");
+                        }
+
                         break;
                     }
                     case e_Current_cmd.CONVERSION_FAILURE:
                     {
                         Console.WriteLine("转换失败！");
                         this.RequestStop();
-                        workerThread.Join();
+
+                        //关闭数据库
+                        temp = Close_Databse(sqlcom);
+                        if (temp == 0x00)
+                        {
+                            Console.WriteLine("数据库关闭成功!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("数据库关闭失败!");
+                        }
+
                         break; 
                     }
                     default: break; 
                 }
                 Thread.Sleep(1);
+            }
+            //关闭数据库
+            temp = Close_Databse(sqlcom);
+            if (temp == 0x00)
+            {
+                Console.WriteLine("数据库关闭成功!");
+            }
+            else
+            {
+                Console.WriteLine("数据库关闭失败!");
             }
         }
         public void RequestStop()

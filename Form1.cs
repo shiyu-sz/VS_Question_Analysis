@@ -28,7 +28,7 @@ namespace Question_Analysis
             this.textBox_mysqlDatabease.Text    = "sy_test";
             this.textBox_mysqlTable.Text        = "table1";
 
-            common.gInput_Info.input_path = "E:\\GitHub\\VS_Question_Analysis\\无人机驾驶员试题库.txt";
+            common.gInput_Info.input_path = "E:\\GitHub\\VS_Question_Analysis\\无人机驾驶员试题库50.txt";
             this.textBox_txtpath.Text = common.gInput_Info.input_path;
 
         }
@@ -156,7 +156,7 @@ namespace Question_Analysis
                     Console.WriteLine("查询库错误!");
                 }
 
-                temp = Connect_Databse(sqlcom);
+                temp = Close_Databse(sqlcom);
                 if (temp == 0x00)
                 {
                     Console.WriteLine("数据库关闭成功!");
@@ -200,7 +200,9 @@ namespace Question_Analysis
 
         private void button_stop_Click(object sender, EventArgs e)
         {
-
+            RequestStop();
+            workerThread.Join();
+            Console.WriteLine("thread stop!");
         }
 
     }

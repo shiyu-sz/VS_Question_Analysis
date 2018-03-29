@@ -51,7 +51,7 @@ namespace Question_Analysis
 
         //关闭数据库
         //返回值：0x00>关闭成功 -1>关闭失败
-        private int Connect_Databse(MySqlConnection com)
+        private int Close_Databse(MySqlConnection com)
         {
             try
             {
