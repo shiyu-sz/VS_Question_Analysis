@@ -33,7 +33,8 @@ namespace Question_Analysis
         //返回值：0x00>插入成功 -1>插入失败
         private int Insert_Table(MySqlConnection con, string table, Test_Questions data)
         {
-            string insert_str = "INSERT INTO " + table + " VALUES ( "+ "\"" + data.Subject + "\""+", " + "\""+ data.Option_A + "\""+ ", " + "\""+ data.Option_B + "\""+ ", " + "\""+ data.Option_C + "\""+ ", " + "\""+ data.Answer + "\""+ " );";
+//            string insert_str = "INSERT INTO " + table + " VALUES ( "+ "\"" + data.Subject + "\""+", " + "\""+ data.Option_A + "\""+ ", " + "\""+ data.Option_B + "\""+ ", " + "\""+ data.Option_C + "\""+ ", " + "\""+ data.Answer + "\""+ " );";
+            string insert_str = "INSERT INTO " + table + "(Subject, A, B, C, Answer)" + " VALUES ( "+ "\"" + data.Subject + "\""+", " + "\""+ data.Option_A + "\""+ ", " + "\""+ data.Option_B + "\""+ ", " + "\""+ data.Option_C + "\""+ ", " + "\""+ data.Answer + "\""+ " );";
             Console.WriteLine("INSERT = {0}", insert_str);
 
             try

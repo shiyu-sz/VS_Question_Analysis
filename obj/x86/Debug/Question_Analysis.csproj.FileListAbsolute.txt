@@ -16,3 +16,12 @@ E:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.csprojResolveAsse
 E:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.Form1.resources
 E:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.Properties.Resources.resources
 E:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.csproj.GenerateResource.Cache
+D:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.csprojResolveAssemblyReference.cache
+D:\GitHub\VS_Question_Analysis\bin\Debug\Question_Analysis.exe.config
+D:\GitHub\VS_Question_Analysis\bin\Debug\Question_Analysis.exe
+D:\GitHub\VS_Question_Analysis\bin\Debug\Question_Analysis.pdb
+D:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.Form1.resources
+D:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.Properties.Resources.resources
+D:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.csproj.GenerateResource.Cache
+D:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.exe
+D:\GitHub\VS_Question_Analysis\obj\x86\Debug\Question_Analysis.pdb
