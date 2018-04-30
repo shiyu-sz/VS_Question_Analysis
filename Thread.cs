@@ -31,7 +31,7 @@ namespace Question_Analysis
                         else
                         {
                             BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "题库文件不存在" });
-                            common.gCurrent_cmd = e_Current_cmd.CONVERSION_FINISH;
+                            common.gCurrent_cmd = e_Current_cmd.CONVERSION_FAILURE;
                             break;
                         }
 
@@ -47,18 +47,27 @@ namespace Question_Analysis
                                 temp = User_Databse(sqlcom, common.gInput_Info.mysql_databases);
                                 if (temp == 0x00)
                                 {
-                                    temp = Create_Table(sqlcom, common.gInput_Info.mysql_table, common.gInput_Info.table_struct);
+                                    temp = Is_Table_Exists(sqlcom, common.gInput_Info.mysql_databases, common.gInput_Info.mysql_table);
                                     if (temp == 0x00)
                                     {
-                                        Console.WriteLine("创建表成功!");
-                                        common.gCurrent_cmd = e_Current_cmd.START_CONVERSION;
-                                        common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
-                                        break;
+                                        Console.WriteLine("数据表存在!");
+                                        BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "表已存在!" });
                                     }
                                     else
                                     {
-                                        Console.WriteLine("创建表失败!");
-                                        BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "创建表失败!" });
+                                        temp = Create_Table(sqlcom, common.gInput_Info.mysql_table, common.gInput_Info.table_struct);
+                                        if (temp == 0x00)
+                                        {
+                                            Console.WriteLine("创建表成功!");
+                                            common.gCurrent_cmd = e_Current_cmd.START_CONVERSION;
+                                            common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("创建表失败!");
+                                            BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "创建表失败!" });
+                                        }
                                     }
                                 }
                                 else
@@ -126,8 +135,9 @@ namespace Question_Analysis
                         else
                         {
                             Console.WriteLine("数据库关闭失败!");
+                            BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "数据库关闭失败!" });
                         }
-                        common.gCurrent_cmd = e_Current_cmd.CONVERSION_FINISH;
+                        common.gCurrent_cmd = e_Current_cmd.CONVERSION_FAILURE;
                         break;
                     }
                     case e_Current_cmd.START_CONVERSION:
@@ -331,6 +341,7 @@ namespace Question_Analysis
                     case e_Current_cmd.CONVERSION_FAILURE:
                     {
                         Console.WriteLine("转换失败！");
+                        BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "转换失败！" });
                         this.RequestStop();
 
                         //关闭数据库
