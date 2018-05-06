@@ -36,18 +36,18 @@ namespace Question_Analysis
                         }
 
                         //连接接据库
-                        temp = Connect_Databse(ref sqlcom, common.gInput_Info.mysql_ip, common.gInput_Info.mysql_port, common.gInput_Info.mysql_ID, common.gInput_Info.mysql_password);
+                        temp = common_mysql.Connect_Databse(ref sqlcom, common.gInput_Info.mysql_ip, common.gInput_Info.mysql_port, common.gInput_Info.mysql_ID, common.gInput_Info.mysql_password);
                         if (temp == 0x00)
                         {
-                            temp = Is_Database_Exists(sqlcom, common.gInput_Info.mysql_databases);
+                            temp = common_mysql.Is_Database_Exists(sqlcom, common.gInput_Info.mysql_databases);
                             if (temp == 0x00)
                             {
                                 Console.WriteLine("数据库存在!");
                                 //Change_Datebase_Code(sqlcom, common.gInput_Info.mysql_databases);
-                                temp = User_Databse(sqlcom, common.gInput_Info.mysql_databases);
+                                temp = common_mysql.User_Databse(sqlcom, common.gInput_Info.mysql_databases);
                                 if (temp == 0x00)
                                 {
-                                    temp = Is_Table_Exists(sqlcom, common.gInput_Info.mysql_databases, common.gInput_Info.mysql_table);
+                                    temp = common_mysql.Is_Table_Exists(sqlcom, common.gInput_Info.mysql_databases, common.gInput_Info.mysql_table);
                                     if (temp == 0x00)
                                     {
                                         Console.WriteLine("数据表存在!");
@@ -55,7 +55,7 @@ namespace Question_Analysis
                                     }
                                     else
                                     {
-                                        temp = Create_Table(sqlcom, common.gInput_Info.mysql_table, common.gInput_Info.table_struct);
+                                        temp = common_mysql.Create_Table(sqlcom, common.gInput_Info.mysql_table, common.gInput_Info.table_struct);
                                         if (temp == 0x00)
                                         {
                                             Console.WriteLine("创建表成功!");
@@ -81,15 +81,15 @@ namespace Question_Analysis
                             else if (temp == 0x01)
                             {
                                 Console.WriteLine("数据库不存在!");
-                                temp = Create_Databse(sqlcom, common.gInput_Info.mysql_databases);
+                                temp = common_mysql.Create_Databse(sqlcom, common.gInput_Info.mysql_databases);
                                 if (temp == 0x00)
                                 {
                                     Console.WriteLine("创建库成功!");
                                     //Change_Datebase_Code(sqlcom, common.gInput_Info.mysql_databases);
-                                    temp = User_Databse(sqlcom, common.gInput_Info.mysql_databases);
+                                    temp = common_mysql.User_Databse(sqlcom, common.gInput_Info.mysql_databases);
                                     if (temp == 0x00)
                                     {
-                                        temp = Create_Table(sqlcom, common.gInput_Info.mysql_table, common.gInput_Info.table_struct);
+                                        temp = common_mysql.Create_Table(sqlcom, common.gInput_Info.mysql_table, common.gInput_Info.table_struct);
                                         if (temp == 0x00)
                                         {
                                             Console.WriteLine("创建表成功!");
@@ -127,7 +127,7 @@ namespace Question_Analysis
                             BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "连接数据库失败!" });
                         }
 
-                        temp = Close_Databse(sqlcom);
+                        temp = common_mysql.Close_Databse(sqlcom);
                         if (temp == 0x00)
                         {
                             Console.WriteLine("数据库关闭成功!");
@@ -294,7 +294,7 @@ namespace Question_Analysis
                                         {
                                             common.gConversion_cmd = e_Conversion_cmd.SUBJECT;
                                             common.gTest_Questions.Title_Number = Subject_Count;
-                                            Insert_Table(sqlcom, common.gInput_Info.mysql_table, common.gTest_Questions);
+                                            common_mysql.Insert_Table(sqlcom, common.gInput_Info.mysql_table, common.gTest_Questions);
                                             Subject_Count++;
                                         }
                                         else
@@ -326,7 +326,7 @@ namespace Question_Analysis
                         BeginInvoke(new stuInfoDelegate(showStuIfo), new object[] { "转换完成！" });
                         this.RequestStop();
                         //关闭数据库
-                        temp = Close_Databse(sqlcom);
+                        temp = common_mysql.Close_Databse(sqlcom);
                         if (temp == 0x00)
                         {
                             Console.WriteLine("数据库关闭成功!");
@@ -345,7 +345,7 @@ namespace Question_Analysis
                         this.RequestStop();
 
                         //关闭数据库
-                        temp = Close_Databse(sqlcom);
+                        temp = common_mysql.Close_Databse(sqlcom);
                         if (temp == 0x00)
                         {
                             Console.WriteLine("数据库关闭成功!");
@@ -362,7 +362,7 @@ namespace Question_Analysis
                 Thread.Sleep(1);
             }
             //关闭数据库
-            temp = Close_Databse(sqlcom);
+            temp = common_mysql.Close_Databse(sqlcom);
             if (temp == 0x00)
             {
                 Console.WriteLine("数据库关闭成功!");

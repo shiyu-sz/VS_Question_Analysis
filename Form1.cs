@@ -43,22 +43,31 @@ namespace Question_Analysis
         {
             int temp;
             MySqlConnection sqlcom = null;
-            /*
+            
             //连接接据库
-            temp = Connect_Databse(ref sqlcom, "172.93.40.38", "3306", "root", "password");
+            temp = common_mysql.Connect_Databse(ref sqlcom, "198.13.61.243", "3306", "root", "sy84436446");
             if (temp == 0x00)
             {
-                temp = Is_Database_Exists(sqlcom, "mydb");
+                temp = common_mysql.Is_Database_Exists(sqlcom, "sy_test");
                 if (temp == 0x00)
                 {
                     Console.WriteLine("数据库存在!");
-                    temp = Is_Table_Exists(sqlcom, "mydb", "table4");
-                    if(temp == 0x00)
-                        Console.WriteLine("表存在!");
-                    else if(temp == 0x01)
-                        Console.WriteLine("表不存在!");
-                    else
-                        Console.WriteLine("查询表错误");
+                    temp = common_mysql.User_Databse(sqlcom, "sy_test");
+                    if (temp == 0x00)
+                    {
+                        temp = common_mysql.Is_Table_Exists(sqlcom, "sy_test", "table_full");
+                        if (temp == 0x00)
+                        {
+                            common_mysql.Query_One_Record(sqlcom, "table_full", 4, ref common.gRead_Questions);
+                            Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5}", common.gRead_Questions.Title_Number, common.gRead_Questions.Subject, common.gRead_Questions.Option_A, common.gRead_Questions.Option_B, common.gRead_Questions.Option_C, common.gRead_Questions.Answer);
+
+                            Console.WriteLine("表存在!");
+                        }
+                        else if (temp == 0x01)
+                            Console.WriteLine("表不存在!");
+                        else
+                            Console.WriteLine("查询表错误");
+                    }
                 }
                 else if (temp == 0x01)
                 {
@@ -69,7 +78,7 @@ namespace Question_Analysis
                     Console.WriteLine("查询库错误!");
                 }
 
-                temp = Connect_Databse(sqlcom);
+                temp = common_mysql.Close_Databse(sqlcom);
                 if (temp == 0x00)
                 {
                     Console.WriteLine("数据库关闭成功!");
@@ -81,31 +90,30 @@ namespace Question_Analysis
             }
             else
                 Console.WriteLine("连接数据库失败!");
-        }
-             * */
 
+            /*
             //连接接据库
-            temp = Connect_Databse(ref sqlcom, "172.93.40.38", "3306", "root", "password");
+            temp = common_mysql.Connect_Databse(ref sqlcom, "172.93.40.38", "3306", "root", "password");
             if (temp == 0x00)
             {
-                temp = Is_Database_Exists(sqlcom, "test2");
+                temp = common_mysql.Is_Database_Exists(sqlcom, "test2");
                 if (temp == 0x00)
                 {
                     Console.WriteLine("数据库存在!");
-                    /*
+                    
                     temp = Delete_Databse(sqlcom, "mydb2");
                     if(temp == 0x00)
                         Console.WriteLine("删除成功!");
                     else
-                        Console.WriteLine("删除失败!");
-                     * */
-                    temp = User_Databse(sqlcom, "test2");
+                       Console.WriteLine("删除失败!");
+                     
+                    temp = common_mysql.User_Databse(sqlcom, "test2");
                     if (temp == 0x00)
                     {
-                        temp = Is_Table_Exists(sqlcom, "test2", "table3");
+                        temp = common_mysql.Is_Table_Exists(sqlcom, "test2", "table3");
                         if (temp == 0x00)
                         {
-                            temp = Delete_Table(sqlcom, "table3");
+                            temp = common_mysql.Delete_Table(sqlcom, "table3");
                             if (temp == 0x00)
                                 Console.WriteLine("删除成功!");
                             else
@@ -124,19 +132,19 @@ namespace Question_Analysis
                 else if (temp == 0x01)
                 {
                     Console.WriteLine("数据库不存在!");
-                    temp = Create_Databse(sqlcom, "mydb2");
+                    temp = common_mysql.Create_Databse(sqlcom, "mydb2");
                     if (temp == 0x00)
                     {
                         Console.WriteLine("创建库成功!");
-                        temp = User_Databse(sqlcom, "mydb2");
+                        temp = common_mysql.User_Databse(sqlcom, "mydb2");
                         if (temp == 0x00)
                         {
-                            temp = Is_Table_Exists(sqlcom, "mydb2", "mytable5");
+                            temp = common_mysql.Is_Table_Exists(sqlcom, "mydb2", "mytable5");
                             if(temp == 0x00)
                                 Console.WriteLine("表已经存在!");
                             else if (temp == 0x01)
                             {
-                                temp = Create_Table(sqlcom, "mytable5", "(s1 VARCHAR(20), s2 INT, s3 INT)");
+                                temp = common_mysql.Create_Table(sqlcom, "mytable5", "(s1 VARCHAR(20), s2 INT, s3 INT)");
                                 if (temp == 0x00)
                                     Console.WriteLine("创建表成功!");
                                 else
@@ -156,7 +164,7 @@ namespace Question_Analysis
                     Console.WriteLine("查询库错误!");
                 }
 
-                temp = Close_Databse(sqlcom);
+                temp = common_mysql.Close_Databse(sqlcom);
                 if (temp == 0x00)
                 {
                     Console.WriteLine("数据库关闭成功!");
@@ -168,6 +176,7 @@ namespace Question_Analysis
             }
             else
                 Console.WriteLine("连接数据库失败!");
+             * */
         }
 
         private void button_open_Click(object sender, EventArgs e)
